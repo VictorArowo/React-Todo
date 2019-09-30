@@ -17,6 +17,20 @@ const Div = styled.div`
     font-weight: bold;
   }
 
+  input {
+    width: 250px;
+    height: 40px;
+    font-weight: 20px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    padding: 5px 20px;
+    transition: box-shadow 0.3s;
+    &:focus {
+      box-shadow: 0 3px 6px 0 white;
+    }
+  }
+
   button {
     border: none;
     width: 200px;
@@ -34,7 +48,9 @@ const Div = styled.div`
 export default class App extends React.Component {
   state = {
     todoData: [],
-    formInput: ''
+    formInput: '',
+    searchTerm: '',
+    searchResults: []
   };
 
   setFormInput = e => {
@@ -50,9 +66,21 @@ export default class App extends React.Component {
   componentDidMount() {
     let todoItems = JSON.parse(localStorage.getItem('Todos'));
     this.setState({
-      todoData: todoItems
+      todoData: todoItems,
+      searchResults: todoItems
     });
   }
+
+  searchChange = event => {
+    this.setState({
+      searchTerm: event.target.value
+    });
+    this.setState(prev => ({
+      searchResults: prev.todoData.filter(item =>
+        item.name.includes(prev.searchTerm)
+      )
+    }));
+  };
 
   addEvent = e => {
     e.preventDefault();
@@ -64,6 +92,9 @@ export default class App extends React.Component {
         ],
         formInput: ''
       }));
+    this.setState(prev => ({
+      searchResults: prev.todoData
+    }));
   };
 
   markCompleted = id => {
@@ -78,22 +109,38 @@ export default class App extends React.Component {
     this.setState({
       todoData: [...updatedState]
     });
+    this.setState(prev => ({
+      searchResults: prev.todoData.filter(item =>
+        item.name.includes(prev.searchTerm)
+      )
+    }));
   };
 
   clearCompleted = () => {
     this.setState(prev => ({
       todoData: [...prev.todoData.filter(item => item.completed === false)]
     }));
+    this.setState(prev => ({
+      searchResults: prev.todoData.filter(item =>
+        item.name.includes(prev.searchTerm)
+      )
+    }));
   };
 
   render() {
     return (
       <Div>
+        <input
+          type="text"
+          placeholder="Search.."
+          onChange={this.searchChange}
+          value={this.state.searchTerm}
+        />
         {this.state.todoData.length === 0 ? (
-          <div class="text">You have nothing to do, Scrub</div>
+          <div className="text">You have nothing to do, Scrub</div>
         ) : (
           <TodoList
-            todoData={this.state.todoData}
+            todoData={this.state.searchResults}
             markCompleted={this.markCompleted}
           />
         )}
