@@ -20,14 +20,19 @@ class App extends React.Component {
       todoData: [
         ...prev.todoData,
         { name: prev.formInput, completed: false, id: 123 }
-      ]
+      ],
+      formInput: ''
     }));
   };
 
   render() {
     return (
       <>
-        <TodoList todoData={this.state.todoData} />
+        {this.state.todoData.length === 0 ? (
+          <div>'No data'</div>
+        ) : (
+          <TodoList todoData={this.state.todoData} />
+        )}
         <TodoForm
           addEvent={this.addEvent}
           formInput={this.state.formInput}

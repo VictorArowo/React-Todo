@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class Todo extends Component {
   render() {
-    return <div></div>;
+    return <div>{this.props.item.name}</div>;
   }
 }
 
