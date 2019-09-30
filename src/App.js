@@ -27,10 +27,17 @@ class App extends React.Component {
   };
 
   markCompleted = id => {
-    const item = this.state.todoData.find(item => item.id === id);
-    this.setState(prev => ({
-      todoData: [...prev.todoData, (item.completed = true)]
-    }));
+    const index = this.state.todoData.findIndex(index => index.id === id);
+    const updatedTodo = { ...this.state.todoData[index], completed: true };
+    const updatedState = [
+      ...this.state.todoData.slice(0, index),
+      updatedTodo,
+      ...this.state.todoData.slice(index + 1)
+    ];
+
+    this.setState({
+      todoData: [...updatedState]
+    });
   };
 
   render() {
