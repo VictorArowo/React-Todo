@@ -43,6 +43,17 @@ export default class App extends React.Component {
     });
   };
 
+  componentDidUpdate() {
+    localStorage.setItem('Todos', JSON.stringify(this.state.todoData));
+  }
+
+  componentDidMount() {
+    let todoItems = JSON.parse(localStorage.getItem('Todos'));
+    this.setState({
+      todoData: todoItems
+    });
+  }
+
   addEvent = e => {
     e.preventDefault();
     if (this.state.formInput)
