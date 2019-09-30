@@ -2,8 +2,36 @@ import React from 'react';
 import TodoList from './components/TodoComponents/TodoList';
 import TodoForm from './components/TodoComponents/TodoForm';
 import uuid from 'uuid';
+import styled from 'styled-components';
 
-class App extends React.Component {
+const Div = styled.div`
+  width: 98vw;
+  height: 97.6vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  .text {
+    font-size: 50px;
+    font-weight: bold;
+  }
+
+  button {
+    border: none;
+    width: 200px;
+    height: 30px;
+    border-radius: 2px;
+    font-size: 20px;
+    font-weight: bold;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+
+export default class App extends React.Component {
   state = {
     todoData: [],
     formInput: ''
@@ -17,13 +45,14 @@ class App extends React.Component {
 
   addEvent = e => {
     e.preventDefault();
-    this.setState(prev => ({
-      todoData: [
-        ...prev.todoData,
-        { name: prev.formInput, completed: false, id: uuid() }
-      ],
-      formInput: ''
-    }));
+    if (this.state.formInput)
+      this.setState(prev => ({
+        todoData: [
+          ...prev.todoData,
+          { name: prev.formInput, completed: false, id: uuid() }
+        ],
+        formInput: ''
+      }));
   };
 
   markCompleted = id => {
@@ -40,11 +69,17 @@ class App extends React.Component {
     });
   };
 
+  clearCompleted = () => {
+    this.setState(prev => ({
+      todoData: [...prev.todoData.filter(item => item.completed === false)]
+    }));
+  };
+
   render() {
     return (
-      <>
+      <Div>
         {this.state.todoData.length === 0 ? (
-          <div>'No data'</div>
+          <div class="text">You have nothing to do, Scrub</div>
         ) : (
           <TodoList
             todoData={this.state.todoData}
@@ -56,9 +91,8 @@ class App extends React.Component {
           formInput={this.state.formInput}
           setFormInput={this.setFormInput}
         />
-      </>
+        <button onClick={this.clearCompleted}>Clear Completed</button>
+      </Div>
     );
   }
 }
-
-export default App;
