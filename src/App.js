@@ -65,10 +65,17 @@ export default class App extends React.Component {
 
   componentDidMount() {
     let todoItems = JSON.parse(localStorage.getItem('Todos'));
-    this.setState({
-      todoData: todoItems,
-      searchResults: todoItems
-    });
+    if (todoItems) {
+      this.setState({
+        todoData: todoItems,
+        searchResults: todoItems
+      });
+    } else {
+      this.setState({
+        todoData: [],
+        searchResults: []
+      });
+    }
   }
 
   searchChange = event => {
@@ -136,7 +143,7 @@ export default class App extends React.Component {
           onChange={this.searchChange}
           value={this.state.searchTerm}
         />
-        {this.state.todoData.length === 0 ? (
+        {!this.state.searchResults ? (
           <div className="text">You have nothing to do, Scrub</div>
         ) : (
           <TodoList
