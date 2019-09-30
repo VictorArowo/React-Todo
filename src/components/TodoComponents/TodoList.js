@@ -6,7 +6,11 @@ class TodoList extends Component {
     return (
       <div>
         {this.props.todoData.map(item => (
-          <Todo item={item} />
+          <Todo
+            key={item.id}
+            item={item}
+            markCompleted={this.props.markCompleted}
+          />
         ))}
       </div>
     );

@@ -1,6 +1,7 @@
 import React from 'react';
 import TodoList from './components/TodoComponents/TodoList';
 import TodoForm from './components/TodoComponents/TodoForm';
+import uuid from 'uuid';
 
 class App extends React.Component {
   state = {
@@ -19,9 +20,16 @@ class App extends React.Component {
     this.setState(prev => ({
       todoData: [
         ...prev.todoData,
-        { name: prev.formInput, completed: false, id: 123 }
+        { name: prev.formInput, completed: false, id: uuid() }
       ],
       formInput: ''
+    }));
+  };
+
+  markCompleted = id => {
+    const item = this.state.todoData.find(item => item.id === id);
+    this.setState(prev => ({
+      todoData: [...prev.todoData, (item.completed = true)]
     }));
   };
 
@@ -31,7 +39,10 @@ class App extends React.Component {
         {this.state.todoData.length === 0 ? (
           <div>'No data'</div>
         ) : (
-          <TodoList todoData={this.state.todoData} />
+          <TodoList
+            todoData={this.state.todoData}
+            markCompleted={this.markCompleted}
+          />
         )}
         <TodoForm
           addEvent={this.addEvent}
